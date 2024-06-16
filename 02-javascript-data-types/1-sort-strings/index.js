@@ -6,14 +6,9 @@
  */
 export function sortStrings(arr, param = 'asc') {
   const locales = ['ru', 'en'];
-  const options = { sensitivity: 'variant', caseFirst: 'upper' };
+  const options = { caseFirst: 'upper' };
+  const k = param === 'asc' ? 1 : -1;
 
-  if (param === 'desc') {
-    options.caseFirst = 'false';
-  }
-
-  return param === 'desc'
-    ? arr.slice().sort((a, b) => b.localeCompare(a, locales, options))
-    : arr.slice().sort((a, b) => a.localeCompare(b, locales, options));
+  return arr.slice().sort((a, b) => k * a.localeCompare(b, locales, options));
 }
 
