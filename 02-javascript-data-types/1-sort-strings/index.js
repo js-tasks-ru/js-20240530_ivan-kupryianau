@@ -5,7 +5,7 @@
  * @returns {string[]}
  */
 export function sortStrings(arr, param = 'asc') {
-  const locales = ['en', 'ru'];
+  const locales = ['ru', 'en'];
   const options = { sensitivity: 'variant', caseFirst: 'upper' };
 
   if (param === 'desc') {

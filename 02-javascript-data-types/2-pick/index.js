@@ -5,22 +5,15 @@
  * @returns {object} - returns the new object
  */
 export const pick = (obj, ...fields) => {
-  let keyValueArr = Object.entries(obj); // [ [ 'apple', 2 ], [ 'orange', 4 ], [ 'banana', 3 ] ]
   let result = {};
 
-  if (keyValueArr.length === 0) {
-    for (let field of fields) {
-      result[field] = fields.findIndex(field => field === field);
+  fields.forEach(field => {
+    if (field in obj) {
+      result[field] = obj[field];
     }
-  }
-
-  for (let item of keyValueArr) {
-    for (let field of fields) {
-      if (item[0] === field) {
-        result[field] = item[1];
-      }
-    }
-  }
+  });
 
   return result;
 };
+
+
