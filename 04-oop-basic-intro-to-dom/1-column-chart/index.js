@@ -7,14 +7,14 @@ export default class ColumnChart {
     label = '',
     value = 1,
     link = '',
-    formatHeading = value => value,
+    formatHeading = value => value
   } = {}) {
     this.data = data;
     this.label = label;
     this.value = value;
     this.link = link;
+    this.formatHeading = formatHeading;
     this.element = this.createElement(this.createTemplate());
-    // this.formatHeading = formatHeading;
   }
 
   createTemplate() {
@@ -25,7 +25,7 @@ export default class ColumnChart {
         ${this.createTemplateLink()}
       </div>
       <div class="column-chart__container">
-        <div data-element="header" class="column-chart__header">${this.formatHeading()}</div>
+        <div data-element="header" class="column-chart__header">${this.formatHeading(this.value)}</div>
         <div data-element="body" class="column-chart__chart">
           ${this.createBodyTemplate()}
         </div>
@@ -48,10 +48,6 @@ export default class ColumnChart {
         value: String(Math.floor(item * scale))
       };
     });
-  }
-
-  formatHeading() {
-    return `USD ${this.value}`;
   }
 
   update(newData) {
