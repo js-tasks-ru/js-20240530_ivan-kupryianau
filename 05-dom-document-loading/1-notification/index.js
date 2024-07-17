@@ -1,5 +1,6 @@
 export default class NotificationMessage {
   element;
+  timerId;
   static currentShownComponentLink;
 
   constructor(message, {
@@ -47,7 +48,7 @@ export default class NotificationMessage {
     NotificationMessage.currentShownComponentLink = this;
 
     container.append(this.element);
-    setTimeout(() => {
+    this.timerId = setTimeout(() => {
       this.destroy();
     }, this.duration);
   }
@@ -58,5 +59,6 @@ export default class NotificationMessage {
 
   destroy() {
     this.remove();
+    clearTimeout(this.timerId);
   }
 }
