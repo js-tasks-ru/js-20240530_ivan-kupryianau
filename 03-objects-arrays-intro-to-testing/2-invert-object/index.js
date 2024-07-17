@@ -7,11 +7,13 @@
 
 export function invertObj(obj) {
 
-  return arguments.length < 1
+  return !obj
     ? undefined
     : Object.keys(obj).reduce((acc, key) => {
       acc[obj[key]] = key;
       return acc;
     }, {});
 }
+
+
 
