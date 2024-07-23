@@ -82,7 +82,7 @@ export default class SortableTable {
     }).join("");
   }
 
-  sort(field, order = 'asc') {
+  sort(field, order) {
     let copyArr = [...this.data];
 
     order === 'asc'
