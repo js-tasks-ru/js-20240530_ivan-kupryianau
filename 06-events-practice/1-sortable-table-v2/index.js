@@ -3,53 +3,49 @@ import SortableTableV1 from "../../05-dom-document-loading/2-sortable-table-v1/i
 export default class SortableTable extends SortableTableV1 {
   constructor(headersConfig, {
     data = [],
-    sorted: { sortedId = 'title', sortedOrder = 'asc' } = {},
+    sorted: {id = 'title', order = 'asc'} = {},
   } = {}) {
     super(headersConfig, data);
-
-    this.headerConfig = headersConfig;
-    this.data = data;
-    this.sortedId = sortedId;
-    this.sortedOrder = sortedOrder;
-    this.isSortLocally = true;
-    this.sort(sortedId, sortedOrder);
+    this.sortedId = id;
+    this.sortedOrder = order;
     this.createEventListeners();
+    this.handleSortSource();
   }
 
-  sortOnServer() {
-    return undefined;
-  }
-
-  handleSortSource(id, order) {
-    if (this.isSortLocally) {
-      this.sort(id, order);
-    } else {
-      this.sortOnServer();
-    }
+  handleSortSource() {
+    this.sort(this.sortedId, this.sortedOrder);
+    this.headerSorted = this.element.querySelector(
+      `[data-id="${this.sortedId}"]`
+    );
+    this.headerSorted.append(this.handleCreateArrow());
   }
 
   handleElementClick = (e) => {
-    const element = document.querySelector(".sortable-table__cell[data-sortable='true']");
-    const div = document.createElement("div");
-    div.classList.add('arrowContainer');
-    element.append(div);
-    e.currentTarget.querySelector('.arrowContainer').innerHTML = this.handleAddArrow();
+    const element = e.target.closest(".sortable-table__cell[data-sortable='true']");
+    e.target.append(this.handleCreateArrow());
     this.sortedId = element.dataset.id;
-    this.sortedOrder = element.dataset.order ? 'asc' : 'desc';
+    this.sortedOrder = element.dataset.order === 'asc' ? 'desc' : 'asc';
     element.dataset.order = this.sortedOrder;
-    this.handleSortSource(this.sortedId, this.sortedOrder);
-  }
 
-  handleAddArrow() {
-    return (`
-       <span data-element="arrow" class="sortable-table__sort-arrow">
-          <span class="sort-arrow"></span>
-        </span>
-    `);
+    this.handleSortSource(this.sortedId, this.sortedOrder);
+  };
+
+  handleCreateArrow() {
+    let arrowElement = this.element.querySelector(
+      ".sortable-table__sort-arrow"
+    );
+
+    if (!arrowElement) {
+      arrowElement = document.createElement("span");
+      arrowElement.dataset.element = "arrow";
+      arrowElement.classList.add("sortable-table__sort-arrow");
+      arrowElement.innerHTML = `<span class="sort-arrow"></span>`;
+    }
+    return arrowElement;
   }
 
   createEventListeners() {
-    this.element.addEventListener('click', (e) => this.handleElementClick(e));
+    this.element.addEventListener('click', this.handleElementClick);
   }
 
   destroyEventListeners() {

@@ -84,9 +84,6 @@ export default class SortableTable {
 
   sort(field = 'title', order = 'asc') {
     let copyArr = [...this.data];
-
-    console.log(`field is ${field} order is ${order}`);
-
     order === 'asc'
       ? copyArr?.sort((firstValue, secondValue) => firstValue[field]
         .toString()
