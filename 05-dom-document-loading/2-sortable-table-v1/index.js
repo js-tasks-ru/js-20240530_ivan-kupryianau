@@ -44,14 +44,14 @@ export default class SortableTable {
     return `
         <a href="/products/${dataItem.id}" class="sortable-table__row">
         ${this.headerConfig.map((item) => {
-      if (item.template) {
-        return item.template(dataItem.images);
-      } else {
-        return `
+    if (item.template) {
+      return item.template(dataItem.images);
+    } else {
+      return `
               <div class="sortable-table__cell">${dataItem[item.id]}</div>
             `;
-      }
-    }).join("")}
+    }
+  }).join("")}
        </a>`;
   }
 
@@ -82,11 +82,13 @@ export default class SortableTable {
     }).join("");
   }
 
-  sort(field, order) {
+  sort(field = 'title', order = 'asc') {
     let copyArr = [...this.data];
 
+    console.log(`field is ${field} order is ${order}`);
+
     order === 'asc'
-      ? copyArr.sort((firstValue, secondValue) => firstValue[field]
+      ? copyArr?.sort((firstValue, secondValue) => firstValue[field]
         .toString()
         .localeCompare(secondValue[field], ['ru', 'en'],
           {
