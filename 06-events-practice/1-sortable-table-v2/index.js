@@ -8,48 +8,47 @@ export default class SortableTable extends SortableTableV1 {
     super(headersConfig, data);
     this.sortedId = id;
     this.sortedOrder = order;
+
     this.createEventListeners();
-    this.handleSortSource();
+
+    this.arrowElement = this.createArrowElement();
+    this.updateArrowPosition();
   }
 
-  handleSortSource() {
-    this.sort(this.sortedId, this.sortedOrder);
-    this.headerSorted = this.element.querySelector(
-      `[data-id="${this.sortedId}"]`
-    );
-    this.headerSorted.append(this.handleCreateArrow());
+  createArrowElement() {
+    const arrowElement = document.createElement("span");
+
+    arrowElement.dataset.element = "arrow";
+    arrowElement.classList.add("sortable-table__sort-arrow");
+    arrowElement.innerHTML = `<span class="sort-arrow"></span>`;
+
+    return arrowElement;
+  }
+
+  updateArrowPosition() {
+    const columnElement = this.element.querySelector(`[data-id="${this.sortedId}"]`);
+    columnElement.append(this.arrowElement);
   }
 
   handleElementClick = (e) => {
     const element = e.target.closest(".sortable-table__cell[data-sortable='true']");
-    e.target.append(this.handleCreateArrow());
+
     this.sortedId = element.dataset.id;
-    this.sortedOrder = element.dataset.order === 'asc' ? 'desc' : 'asc';
+    this.sortedOrder = element.dataset.order === 'desc' ? 'asc' : 'desc';
+
     element.dataset.order = this.sortedOrder;
 
-    this.handleSortSource(this.sortedId, this.sortedOrder);
+    this.updateArrowPosition();
+    this.sort(this.sortedId, this.sortedOrder);
   };
 
-  handleCreateArrow() {
-    let arrowElement = this.element.querySelector(
-      ".sortable-table__sort-arrow"
-    );
-
-    if (!arrowElement) {
-      arrowElement = document.createElement("span");
-      arrowElement.dataset.element = "arrow";
-      arrowElement.classList.add("sortable-table__sort-arrow");
-      arrowElement.innerHTML = `<span class="sort-arrow"></span>`;
-    }
-    return arrowElement;
-  }
 
   createEventListeners() {
-    this.element.addEventListener('click', this.handleElementClick);
+    this.element.addEventListener('pointerdown', this.handleElementClick);
   }
 
   destroyEventListeners() {
-    this.element.removeEventListener('click', this.handleElementClick);
+    this.element.removeEventListener('pointerdown', this.handleElementClick);
   }
 
   destroy() {

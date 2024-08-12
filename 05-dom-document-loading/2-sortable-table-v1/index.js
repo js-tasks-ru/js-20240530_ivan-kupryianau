@@ -13,6 +13,7 @@ export default class SortableTable {
 
   getSubElements() {
     const elements = this.element.querySelectorAll('[data-element]');
+
     for (const element of elements) {
       this.subElements[element.dataset.element] = element;
     }
@@ -82,29 +83,21 @@ export default class SortableTable {
     }).join("");
   }
 
-  sort(field = 'title', order = 'asc') {
-    let copyArr = [...this.data];
-    order === 'asc'
-      ? copyArr?.sort((firstValue, secondValue) => firstValue[field]
-        .toString()
-        .localeCompare(secondValue[field], ['ru', 'en'],
-          {
-            sensitivity: "case",
+  sort(field = "title", order = "asc") {
+    const k = order === "asc" ? 1 : -1;
+
+    this.data.sort(
+      (firstValue, secondValue) =>
+        k *
+        firstValue[field]
+          .toString()
+          .localeCompare(secondValue[field], ["ru", "en"], {
             caseFirst: "upper",
             numeric: true,
-          }
-        )
-      )
-      : copyArr.sort((firstValue, secondValue) => secondValue[field]
-        .toString()
-        .localeCompare(firstValue[field], ['ru', 'en'],
-          {
-            sensitivity: "case",
-            caseFirst: "upper",
-            numeric: true,
-          }
-        ));
-    this.update(copyArr);
+          }),
+    );
+
+    this.update(this.data);
   }
 
   update(newData) {
