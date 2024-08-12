@@ -13,6 +13,7 @@ export default class SortableTable {
 
   getSubElements() {
     const elements = this.element.querySelectorAll('[data-element]');
+
     for (const element of elements) {
       this.subElements[element.dataset.element] = element;
     }
@@ -44,14 +45,14 @@ export default class SortableTable {
     return `
         <a href="/products/${dataItem.id}" class="sortable-table__row">
         ${this.headerConfig.map((item) => {
-      if (item.template) {
-        return item.template(dataItem.images);
-      } else {
-        return `
+    if (item.template) {
+      return item.template(dataItem.images);
+    } else {
+      return `
               <div class="sortable-table__cell">${dataItem[item.id]}</div>
             `;
-      }
-    }).join("")}
+    }
+  }).join("")}
        </a>`;
   }
 
@@ -82,30 +83,21 @@ export default class SortableTable {
     }).join("");
   }
 
-  sort(field, order) {
-    let copyArr = [...this.data];
+  sort(field = "title", order = "asc") {
+    const k = order === "asc" ? 1 : -1;
 
-    order === 'asc'
-      ? copyArr.sort((firstValue, secondValue) => firstValue[field]
-        .toString()
-        .localeCompare(secondValue[field], ['ru', 'en'],
-          {
-            sensitivity: "case",
+    this.data.sort(
+      (firstValue, secondValue) =>
+        k *
+        firstValue[field]
+          .toString()
+          .localeCompare(secondValue[field], ["ru", "en"], {
             caseFirst: "upper",
             numeric: true,
-          }
-        )
-      )
-      : copyArr.sort((firstValue, secondValue) => secondValue[field]
-        .toString()
-        .localeCompare(firstValue[field], ['ru', 'en'],
-          {
-            sensitivity: "case",
-            caseFirst: "upper",
-            numeric: true,
-          }
-        ));
-    this.update(copyArr);
+          }),
+    );
+
+    this.update(this.data);
   }
 
   update(newData) {
